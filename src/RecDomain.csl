@@ -1,0 +1,31 @@
+class RecDomain 
+% A class for simple description of a 3D rectangular domain.
+
+public Dx;          % Rectangular domain extent along X-direction 
+public Dy;          % Rectangular domain extent along Y-direction 
+public Dz;          % Rectangular domain extent along Z-direction 
+
+
+% class constructor 
+function RecDomain(varargin)
+%RecDomain() creates a domain with given parameters.
+%RecDomain(d) creates a domain copy.  
+
+switch nargin 
+   case 1
+      d  = varargin{1};
+      Dx   = d.Dx; 
+      Dy   = d.Dy; 
+      Dz   = d.Dz; 
+      
+   case 3
+      in = varargin;
+      Dx = varargin{1};
+      Dy = varargin{2};
+      Dz = varargin{3};
+
+   otherwise 
+      error('Wrong RecDomain constructor.\n');
+end
+
+

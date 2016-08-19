@@ -1,0 +1,128 @@
+class Particle 
+% A class for solid particles moving in porous media. 
+
+public diameter         % mean-size diamater 
+public density          % density in kg/m^3 
+public diff_coeff       % diffusion coefficient 
+public uc               % critical fluid phase velocity 
+public Csc              % critical fluid salinity 
+public alpha_h          % hydrodynamic release rate 
+public alpha_cl         % colloidal mobilisation rate 
+public alpha_d          % deposition rate in pore surfaces 
+public alpha_pt         % deposition rate in pore throats 
+public alpha_fe         % flow efficiency factor for civan's k-phi model 
+public T                % Absolute temperature of system 
+public visc             % Viscosity of fluid in which the particle flows
+
+public N                % Dimension of arrays dependent on grid size
+                        % like concentration, deposited conc's, etc ... 
+
+public C     = [];                         % Initial concentration
+public C_dep = [];                         % Initial surf. deposited conc
+public C_pt  = [];                         % Initial throats deposited conc
+public C_tsf = [];                         % Initial mass tranfer <=> phases
+
+
+% Constructor function 
+function Particle(varargin)
+%Particle() creates a particle with given parameters.
+%Particle(p) creates a particle copy.  
+
+switch nargin 
+   case 1
+      p  = varargin{1};
+      diameter   = p.diameter; 
+      density    = p.density; 
+      diff_coeff = p.diff_coeff;
+      uc         = p.uc;
+      Csc        = p.Csc;
+      alpha_h    = p.alpha_h; 
+      alpha_cl   = p.alpha_cl; 
+      alpha_d    = p.alpha_d; 
+      alpha_pt   = p.alpha_pt; 
+      alpha_fe   = p.alpha_fe;
+      T          = p.T;
+      visc       = p.visc;
+   
+   case 12
+      in = varargin;
+      diameter   = varargin{1};
+      density    = varargin{2}; 
+      diff_coeff = varargin{3};
+      uc         = varargin{4};
+      Csc        = varargin{5};
+      alpha_h    = varargin{6}; 
+      alpha_cl   = varargin{7}; 
+      alpha_d    = varargin{8}; 
+      alpha_pt   = varargin{9}; 
+      alpha_fe   = varargin{10};
+      T          = varargin{11};
+      visc       = varargin{12};
+   
+   otherwise
+      error('Wrong Particle constructor.\n');
+end
+
+
+public function out = diffusion_coef
+%DIFFUSION_COEF returns the diffusion coefficient of the particle
+% based on its geometric properties and temperature.
+%This models dilute suspensions of spheres as given by the 
+% well-known Stockes-Einstein equation.
+
+k = 1.3806504e-23;           % Boltzmann's constant (CODATA value) 
+T = T - 273.15;              % conversion from degC to degK units  
+out = (k*T)/(3*pi*visc*diameter);
+
+
+public function out = eff_diffusion_coef 
+%EFF_DIFFUSION_COEF returns the effective diffusion coefficient of  
+% the particle based on its geometric properties and temperature.
+%This models the effective diffusion coefficient for uniform or  
+% non-uniform sphere packing as published by Weissberg formula.  
+
+dim = size(phi,1);
+out = (diffusion(T,visc).*phi) ./ (ones(dim,1) - 0.5.*log(phi));
+
+
+public function out = transport(Grid,V,Q,Cs,dt)
+%TRANSPORT calculate the transport by convection-diffusion-kinetics 
+% of this particle over time step dt and updates concentration fractions
+% in mobilised, pore surface/throat deposits. 
+
+   %=======================================================================
+   % Solve the convective part of transport for this time-step.
+   %=======================================================================
+   %%C = Upstream(Grid,C,V,Q,dt);            % explicit concentration solver
+   C = ImplicitConcentration(Grid,C,V,Q,dt); % implicit 'nonlinear' solver 
+   
+   %=======================================================================
+   % Solve for particle kinetics including the following mechanisms:
+   % (1) Hydrodynamic release effect, (2) Colloidal release effect, 
+   % (3) Surface deposition, (4) Pore-throat deposition, (5) interphase 
+   % transfer (from one fluid phase to the other).
+   %=======================================================================
+   
+   % Update deposited mass of the particle & get their rates
+   [C_dep,Rate1] = particleDeposits(Grid,V,this,C,C_dep,Cs,dt);
+   
+   % Update pore-throat mass of the particle & get their rates
+   [C_pt,Rate2] = particlePtDeposits(Grid,V,this,C,C_pt,dt);
+   
+   % Mass transfer between phases
+%%   [C_tsf,Rate3] = particleTransfer(Grid,V,this,C,C_tsf,dt);
+   
+   %=======================================================================
+   % Update particle concentration from newly calculated total rate of mass
+   % transfer
+   %=======================================================================
+   C = C + Rate1 + Rate2;
+      
+   %=======================================================================
+   % Solve the diffusive part of transport for this time-step 
+   % --> reuse the TPFA solver (in transient mode) for this time step.
+   %=======================================================================
+   [C,Flux] = diffusion(Grid,this,C,dt);
+   
+   out = 1;
+

@@ -1,0 +1,54 @@
+class Fluid
+% A class for a fluid phase moving in a porous media. 
+
+public density              % fluid phase density 
+public viscosity            % fluid phase viscosity 
+public Sr                   % Irreducible saturation
+public compressibility      % fluid phase compressibility
+public T                    % current fluid temperature
+public P                    % current fluid pressure
+public S                    % current fluid salinity
+
+
+% Constructor function 
+function Fluid(varargin) 
+%Fluid() creates a fluid with default properties
+%Fluid(f) creates a fluid copy from f.
+
+switch nargin
+   
+   case 1
+      f = varargin{1};
+      density = f.density; 
+      viscosity = f.viscosity;
+      compressibility = f.compressibility;
+      T = f.T;
+      P = f.P;
+      S = f.S;
+      
+   case 2       % initialise from density and viscosity only
+      density   = varargin{1};
+      viscosity = varargin{2};
+
+   case 3       % initialise from density and viscosity only
+      density   = varargin{1};
+      viscosity = varargin{2};
+      Sr        = varargin{3};
+
+   case 6       % all member fields
+      density   = varargin{1};
+      viscosity = varargin{2};
+      compressibility = varargin{3};
+      Sr        = varargin{4};
+      T         = varargin{5};
+      P         = varargin{6};
+      S         = varargin{7};
+
+   otherwise
+      error('Wrong Fluid constructor.\n');
+end
+   
+% Methods to implement for other inherited fluid classes
+% 1) get_density(T,P) or get_density(T,P,S) 
+% 2) get_viscosity(T,P) or get_viscosity(T,P,S)
+% 3) get_compressibility(...)
