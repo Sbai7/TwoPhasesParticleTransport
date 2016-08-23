@@ -37,7 +37,7 @@ Please kindly cite this code in your publications if it helps your research:
 This is an open source project, it is distributed under the [GPL v3](https://www.gnu.org/licenses/gpl-3.0.html). Anyone is free to use, learn, modify, develop or contribute to the code is welcome. Take a look at the contributing guidelines for starting to contribute to the project.
 
 # Documentation 
-Detailed documentation of the code is under preparation. Start by reading the accompagning paper to understand the theory behind. Examples in this paper are included in the code for *reproducible science* they will be explained and posted to the project wiki pages. 
+Detailed documentation of the code is under preparation. Start by reading the accompagning paper to understand the theory behind it. Examples in this paper are included in the code to promote *reproducible science*. They will be explained and posted to the project wiki pages as soon as possible. 
 
 
 
