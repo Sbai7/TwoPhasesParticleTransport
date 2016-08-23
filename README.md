@@ -1,6 +1,6 @@
 # TwoPhasesParticleTransport
 
-Code for numerical modelling of formation damage by two-phase particulate transport processes in heterogeneous porous media. 
+This is a contributed code for numerical modelling of formation damage by two-phase particulate transport processes in heterogeneous porous media. 
 
 It is written in in standard [GNU Octave](https://www.gnu.org/software/octave/) (Matlab clone) high level scripting language. 
 
