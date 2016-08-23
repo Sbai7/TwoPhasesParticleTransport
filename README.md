@@ -12,7 +12,7 @@ The aim of this code is to solve, numerically, the sequentially coupled set of 3
 * The saturation equation for slightly compressible flow; 
 * A set of multispecies coupled particle convection-diffusion equations; 
 * Particles kinetics ODE's;
-* Cellwise porosity/permeability (retroactive effects). 
+* Cellwise porosity/permeability change (retroactive effects). 
 
 *citing* 
 
