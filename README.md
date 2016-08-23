@@ -1,10 +1,10 @@
 # TwoPhasesParticleTransport
 
+![Alt text](pictures/spe36_results_1m.jpg?raw=true "")
+
 This is a contributed code for numerical modelling of formation damage by two-phase particulate transport processes in heterogeneous porous media. 
 
 It is written with standard [GNU Octave](https://www.gnu.org/software/octave/) (Matlab clone) high level scripting language. 
-
-![Alt text](pictures/spe36_results_1m.jpg?raw=true "")
 
 The aim of this code is to solve, numerically, the sequentially coupled set of 3D equations governing particlulate transport processes in two-phase flows by means of a standard Finite Volume technique. This includes:
 
