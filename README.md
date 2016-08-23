@@ -8,7 +8,7 @@ The aim of this code is to solve, numerically, the sequentially coupled set of 3
 
 * The global pressure equation (fractional two-phase flow formulation); 
 * The saturation equation for slightly compressible flow; 
-* A set of coupled particle convection-diffusion equations; 
+* A set of multispecies coupled particle convection-diffusion equations; 
 * Particles kinetics ODE's;
 * Cellwise porosity/permeability (retroactive effects). 
 
