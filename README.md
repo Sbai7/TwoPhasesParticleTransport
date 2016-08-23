@@ -18,7 +18,7 @@ The aim of this code is to solve, numerically, the sequentially coupled set of 3
 Please kindly cite this code in your publications if it helps your research:
 
 
-'''
+```
 @article{sbai-2011,
   author  = {M. A. Sbai},
   author  = {M. Azaroual}
@@ -31,7 +31,7 @@ Please kindly cite this code in your publications if it helps your research:
   doi     = {http://dx.doi.org/10.1016/j.advwatres.2010.09.009},
   url     = {http://www.sciencedirect.com/science/article/pii/S0309170810001715},
 }
-'''
+```
 
 # Copyleft 
 This is an open source project, it is distributed under the [GPL v3](https://www.gnu.org/licenses/gpl-3.0.html). Anyone is free to use, learn, modify, develop or contribute to the code is welcome. Take a look at the contributing guidelines for starting to contribute to the project.
