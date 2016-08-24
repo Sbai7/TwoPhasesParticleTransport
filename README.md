@@ -48,7 +48,7 @@ The most frequently asked question we get concerns [MATLAB](http://www.mathworks
 
 ## Three-dimensional simulations 
 
-Another question is related to 3D support since the code was tested only for one layer models as those presented in the accompagning paper. The code is indeed designed to run fully 3D models. This could be quite demanding computationally though. However, the code is optimally vectorized to achieve the best efficiency. Additional speeedup should be achieved by other means. 
+Another question is related to 3D support since the code was tested only for one layer models as those presented in the accompagning paper. The code is indeed designed to run fully 3D models. This could be quite demanding computationally though. However, the code is optimally vectorized to achieve the best efficiency. Additional speedup should be achieved by other means. 
 
 
 
