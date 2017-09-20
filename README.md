@@ -1,7 +1,7 @@
 # TwoPhasesParticleTransport
 
 # What's New
-* All code functions are now fully compatible with MATLAB (tested on MATALAB R2013a and above) 
+* All code functions are now fully compatible with MATLAB (tested on MATLAB R2013a and later) 
 * All functions/classes of this toolkit are documented 
 * Fully live-script worked tutorials to get started are provided in the examples sub-folder 
 * Dedicated web site which publishes the worked tutorials online
