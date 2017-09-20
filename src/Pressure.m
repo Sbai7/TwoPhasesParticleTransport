@@ -1,12 +1,10 @@
-function [P,V] = TwoPhasePressure(Grid,S_nw,Fluid1,Fluid0,q,P,dt)
-% Drives the two-phase pressure solver in steady-state and transient modes. 
+function [P,V] = Pressure(Grid,Fluid,q,P,dt)
+% Drives the single phase pressure solver in steady-state and transient
+% modes. 
 %
 % INPUTS:
 % Grid              - Grid used for discretization 
-% S_nw              - Array of cell-centered fluid1 (non-wetting) phase 
-%                     saturation 
-% Fluid1            - Fluid properties of the non-wetting (injected) phase 
-% Fluid0            - Fluid properties of the wetting (residant) phase
+% Fluid             - Fluid properties 
 % q                 - Injection/Production flow rates 
 % P  (optional)     - Pressure computed at previous time step 
 % dt (optional)     - Time interval over which to run the transient solver
@@ -26,28 +24,34 @@ function [P,V] = TwoPhasePressure(Grid,S_nw,Fluid1,Fluid0,q,P,dt)
 
 Nx = Grid.Nx; Ny = Grid.Ny; Nz = Grid.Nz; N = Grid.N;
 
-%--- Compute the product K*M(S) where M is the total mobility 
+%--- Compute k/mu array
+k_mu = zeros(3,Nx,Ny,Nz);
 
-% calculate mobilities of fluid1 and fluid0. M1 and M0, respectively.
-[M1,M0] = RelativePerm(S_nw,Fluid1,Fluid0);
-
-% total mobility
-M_total = M1+M0;
-
-% compute the product K*M
-KM = reshape([M_total,M_total,M_total]',3,Nx,Ny,Nz).*Grid.K;
+if isscalar(Fluid.viscosity)    % uniform fluid viscosity
+    
+    k_mu = Grid.K / Fluid.viscosity;
+    
+else                            % array of cell-centered fluid viscosity
+    Fluid.viscosity = Fluid.viscosity(:);
+    assert(length(Fluid.viscosity)==N);
+    for i=1:3
+        k_mu(i,:,:,:) = Grid.K(i,:,:,:) ./ ...
+                        reshape(Fluid.viscosity,1,Nx,Ny,Nz);
+    end
+    
+end
 
 %--- Compute pressure and velocities
-if (nargin > 6)
+if (nargin > 4)
     
     % call two-point flux approximation solver in transient mode
-    [P,V] = TPFA(Grid,KM,q,P,dt);
-
+   [P,V] = TPFA(Grid,k_mu,q,P,dt);
+   
 else
-   
-    % call two-point flux approximation solver in steady-state mode
-    [P,V] = TPFA(Grid,KM,q);
-   
+    
+	% call two-point flux approximation solver in steady-state mode
+    [P,V] = TPFA(Grid,k_mu,q);
+    
 end
 
 end

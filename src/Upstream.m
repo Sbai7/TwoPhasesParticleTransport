@@ -1,4 +1,4 @@
-function C=Upstream(Grid,C,V,q,T)
+function C = Upstream(Grid,C,V,q,T)
 
 Nx=Grid.Nx; Ny=Grid.Ny; Nz=Grid.Nz;          % number of grid points
 N=Nx*Ny*Nz;                                  % number of unknowns
@@ -18,7 +18,7 @@ cfl = (1/3)*pm;                              % CFL restriction
 Nts = ceil(T/cfl);                           % number of local time steps
 dtx = (T/Nts)./pv;                           % local time steps
 
-A=GenA(Grid,V,q);                            % system matrix - convective term
+A=UpwindAdvectionMatrix(Grid,V,q);           % system matrix - convective term
 A=spdiags(dtx,0,N,N)*A;                      % A * dt/|Omega i| 
 
 fi=max(q,0).*dtx;                            % injection

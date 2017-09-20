@@ -1,4 +1,4 @@
-function S=UpstreamExpTwoPhase(Grid,S,Fluid1,Fluid0,V,q,T)
+function S = UpstreamExpTwoPhase(Grid,S,Fluid1,Fluid0,V,q,T)
 
 Nx=Grid.Nx; Ny=Grid.Ny; Nz=Grid.Nz;          % number of grid points
 N=Nx*Ny*Nz;                                  % number of unknowns
@@ -16,7 +16,7 @@ cfl = ((1-Fluid1.Sr-Fluid0.Sr)/3)*pm;        % CFL restriction
 Nts = ceil(T/cfl);                           % number of local time steps
 dtx = (T/Nts)./pv;                           % local time steps
 
-A=GenSatMatrix(Grid,V,q);                    % system matrix - viscous sat. independent term
+A=UpwindAdvectionMatrix(Grid,V,q);           % system matrix - viscous sat. independent term
 A=spdiags(dtx,0,N,N)*A;                      % A * dt/|Omega i|
 
 fi=max(q,0).*dtx;                            % injection
