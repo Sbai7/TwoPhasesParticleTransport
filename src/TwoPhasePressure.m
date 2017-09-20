@@ -1,26 +1,53 @@
-function [P,V]=TwoPhasePressure(Grid,S,Fluid1,Fluid0,q,P,dt)
+function [P,V] = TwoPhasePressure(Grid,S_nw,Fluid1,Fluid0,q,P,dt)
+% Drives the two-phase pressure solver in steady-state and transient modes. 
+%
+% INPUTS:
+% Grid              - Grid used for discretization 
+% S_nw              - Array of cell-centered fluid1 (non-wetting) phase 
+%                     saturation 
+% Fluid1            - Fluid properties of the non-wetting (injected) phase 
+% Fluid0            - Fluid properties of the wetting (residant) phase
+% q                 - Injection/Production flow rates 
+% P  (optional)     - Pressure computed at previous time step 
+% dt (optional)     - Time interval over which to run the transient solver
+%
+% When the last two arguments (P,dt) are supplied, calculations are assumed
+% to be performed in transient conditions.
+%
+% OUTPUTS:
+% P                 - Array of cell-centered pressure
+% V                 - Structure of mid-cells edges velocities along x,y,and
+%                     z directions
+%
+% Author: M.A. Sbai, Ph.D.
+%         BRGM (French Geological Survey) 
+%         D3E  (Direction Eau, Environnement, Echotechnologies)
+% 
 
-% When the last two arguments (P,dt) are supplied, calculations
-% are assumed to be performed in transient conditions. Where 'P'
-% is the solution at the previous time step and 'dt' is the current
-% time step size.
+Nx = Grid.Nx; Ny = Grid.Ny; Nz = Grid.Nz; N = Grid.N;
 
-% gravity = 9.81;
+%--- Compute the product K*M(S) where M is the total mobility 
 
-% Compute K*lambda(S) ... the viscous term
-[M1,M0]=RelativePerm(S,Fluid1,Fluid0);
-Mt = M1+M0;
-KM = reshape([Mt,Mt,Mt]',3,Grid.Nx,Grid.Ny,Grid.Nz).*Grid.K;
+% calculate mobilities of fluid1 and fluid0. M1 and M0, respectively.
+[M1,M0] = RelativePerm(S_nw,Fluid1,Fluid0);
 
-% kz = reshape(Grid.K(3,:,:,:),Grid.Nx,Grid.Ny,Grid.Nz);
-% Mg = zeros(Grid.Nx,Grid.Ny,Grid.Nz);
-% Mg = reshape(Mw',Grid.Nx,Grid.Ny,Grid.Nz).*Fluid.rw + reshape(Mo',Grid.Nx,Grid.Ny,Grid.Nz).*Fluid.ro;
-% KG = gravity.*Mg.*kz;
+% total mobility
+M_total = M1+M0;
 
-% Compute pressure and extract fluxes
-if (nargin == 6)
-   [P,V] = TpfaTwoPhase(Grid,KM,q,P,dt); % transient solver
+% compute the product K*M
+KM = reshape([M_total,M_total,M_total]',3,Nx,Ny,Nz).*Grid.K;
+
+%--- Compute pressure and velocities
+if (nargin > 6)
+    
+    % call two-point flux approximation solver in transient mode
+    [P,V] = TPFA(Grid,KM,q,P,dt);
+
 else
-   [P,V] = TpfaTwoPhase(Grid,KM,q);      % steady-state solver
-% [P,V,rhs] = TpfaTwoPhase(Grid,KM,KG,q);
+   
+    % call two-point flux approximation solver in steady-state mode
+    [P,V] = TPFA(Grid,KM,q);
+   
+end
+
 end
