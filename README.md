@@ -5,6 +5,8 @@
 * All functions/classes of this toolkit are documented 
 * Live-script worked tutorials to get started are provided in the examples sub-folder 
 * Dedicated web site which publishes the worked tutorials online
+* Add a new function to drive the single-phase flow pressure solver 
+* Fluid phase viscosity could be specified as a handle or anonymous function. This is useful to model coupled miscible flow and transport processes during EOR or coupled viscosity-dependent flow and heat transport in geothermal reservoirs among many other applications. 
 
 
 
